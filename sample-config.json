@@ -1,0 +1,13 @@
+{
+    "db": {
+      "host": "localhost",
+      "port": 5432,
+      "database": "health-check",
+      "username": "user",
+      "password": "12qw!@QW",
+      "schema": "public"
+    },
+    "server": {
+      "httpPort": 8080
+    }
+  }
