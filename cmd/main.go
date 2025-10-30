@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"health-check/app"
 	"health-check/config"
-	"health-check/pkg/postgres"
 	"os"
 )
 
@@ -20,19 +20,9 @@ func main() {
 
 	fmt.Println("Reading configuration file:", c)
 
-	db, err := postgres.SetDB(c)
-	if err != nil {
-		panic(err)
-	}
-	sqlDB, err := db.DB()
-	if err != nil {
-		panic(err)
-	}
-	if err := sqlDB.Ping(); err != nil {
-		panic(err)
-	}
+	a := app.MustNewApp(c)
 
-	fmt.Println("database Successfully connected: ", db)
+	fmt.Println("app created: ", a)
 
 }
 
