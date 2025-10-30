@@ -3,7 +3,7 @@
       "host": "localhost",
       "port": 5432,
       "database": "health-check",
-      "username": "user",
+      "username": "admin",
       "password": "12qw!@QW",
       "schema": "public"
     },
