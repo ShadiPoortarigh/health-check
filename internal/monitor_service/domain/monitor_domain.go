@@ -3,6 +3,7 @@ package domain
 import (
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
 	"net"
 	"net/url"
 	"strings"
@@ -10,38 +11,41 @@ import (
 )
 
 type (
-	ApiID    string
-	ResultID string
+	ApiID    uuid.UUID
+	ResultID uuid.UUID
 )
 
+// CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+// ID:       ApiID(uuid.New()),
+
 type MonitoredAPI struct {
-	ID            ApiID             `json:"id"`                        // unique identifier
-	Name          string            `json:"name,omitempty"`            // optional display name
-	URL           string            `json:"url"`                       // target API URL
-	Method        string            `json:"method"`                    // HTTP method (GET, POST, etc.)
-	Headers       map[string]string `json:"headers,omitempty"`         // optional request headers
-	Body          string            `json:"body,omitempty"`            // optional request body
-	Interval      time.Duration     `json:"interval_seconds"`          // interval in seconds for health check
-	Enabled       bool              `json:"enabled"`                   // whether the API is currently monitored
-	Webhook       WebhookConfig     `json:"webhook"`                   // webhook configuration for notifications
-	LastStatus    string            `json:"last_status,omitempty"`     // last known status (OK, FAIL, etc.)
-	LastCheckedAt *time.Time        `json:"last_checked_at,omitempty"` // when the API was last checked
+	ID            ApiID             `json:"id"`
+	Name          string            `json:"name,omitempty"`
+	URL           string            `json:"url"`
+	Method        string            `json:"method"`
+	Headers       map[string]string `json:"headers,omitempty"`
+	Body          string            `json:"body,omitempty"`
+	Interval      time.Duration     `json:"interval_seconds"`
+	Enabled       bool              `json:"enabled"`
+	Webhook       WebhookConfig     `json:"webhook"`
+	LastStatus    string            `json:"last_status,omitempty"`
+	LastCheckedAt *time.Time        `json:"last_checked_at,omitempty"`
 }
 
 type WebhookConfig struct {
-	URL     string            `json:"url"`               // webhook endpoint
-	Headers map[string]string `json:"headers,omitempty"` // optional webhook headers
+	URL     string            `json:"url"`
+	Headers map[string]string `json:"headers,omitempty"`
 }
 
 type CheckResult struct {
-	ID                 ResultID  `json:"id"`                         // unique result ID
-	ApiID              ApiID     `json:"api_id"`                     // related monitored API ID
-	Timestamp          time.Time `json:"timestamp"`                  // time of the check
-	StatusCode         int       `json:"status_code"`                // HTTP response code
-	Success            bool      `json:"success"`                    // whether the check succeeded
-	ResponseTimeMillis int64     `json:"response_time_ms"`           // response time in ms
-	ResponseSnippet    string    `json:"response_snippet,omitempty"` // optional short response body
-	ErrorMessage       string    `json:"error_message,omitempty"`    // optional error info
+	ID                 ResultID  `json:"id"`
+	ApiID              ApiID     `json:"api_id"`
+	Timestamp          time.Time `json:"timestamp"`
+	StatusCode         int       `json:"status_code"`
+	Success            bool      `json:"success"`
+	ResponseTimeMillis int64     `json:"response_time_ms"`
+	ResponseSnippet    string    `json:"response_snippet,omitempty"`
+	ErrorMessage       string    `json:"error_message,omitempty"`
 }
 
 func (m *MonitoredAPI) Validate() error {
@@ -109,8 +113,8 @@ func isPrivateIP(ip net.IP) bool {
 		"10.0.0.0/8",
 		"172.16.0.0/12",
 		"192.168.0.0/16",
-		"127.0.0.0/8",    // loopback
-		"169.254.0.0/16", // link-local
+		"127.0.0.0/8",
+		"169.254.0.0/16",
 	}
 
 	for _, cidr := range privateBlocks {
