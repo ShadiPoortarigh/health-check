@@ -13,3 +13,25 @@
 
 #### Connect to database
 > psql -h localhost -p 5432 -U admin -d "health-check";
+
+#### Create table
+```
+CREATE TABLE monitored_apis (
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ,
+    url TEXT NOT NULL,
+    method TEXT NOT NULL,
+    headers JSONB,
+    body TEXT,
+    interval_seconds BIGINT NOT NULL,
+    enabled BOOLEAN NOT NULL DEFAULT TRUE,
+    last_status TEXT,
+    last_checked_at TIMESTAMPTZ,
+    webhook_url TEXT NOT NULL,
+    webhook_headers JSONB
+);
+
+
+```

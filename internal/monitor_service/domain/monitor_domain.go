@@ -3,7 +3,6 @@ package domain
 import (
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	"net"
 	"net/url"
 	"strings"
@@ -11,8 +10,8 @@ import (
 )
 
 type (
-	ApiID    uuid.UUID
-	ResultID uuid.UUID
+	ApiID    uint
+	ResultID uint
 )
 
 // CREATE EXTENSION IF NOT EXISTS "pgcrypto";
@@ -27,10 +26,12 @@ type MonitoredAPI struct {
 	Body          string            `json:"body,omitempty"`
 	Interval      time.Duration     `json:"interval_seconds"`
 	Enabled       bool              `json:"enabled"`
-	Webhook       WebhookConfig     `json:"webhook"`
+	Webhook       WebhookConfig     `json:"webhook"` // value object
 	LastStatus    string            `json:"last_status,omitempty"`
 	LastCheckedAt *time.Time        `json:"last_checked_at,omitempty"`
 }
+
+// WebhookConfig is value object
 
 type WebhookConfig struct {
 	URL     string            `json:"url"`

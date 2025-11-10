@@ -2,7 +2,6 @@ package monitor_service
 
 import (
 	"errors"
-	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"health-check/internal/monitor_service/domain"
@@ -19,7 +18,9 @@ func (m *MockRepo) Create(api domain.MonitoredAPI) (domain.ApiID, error) {
 	return args.Get(0).(domain.ApiID), args.Error(1)
 }
 
-// happy path
+// ---- Tests ----
+
+// Happy path
 func TestRegisterApi_Success(t *testing.T) {
 	mockRepo := new(MockRepo)
 	service := NewService(mockRepo)
@@ -32,16 +33,16 @@ func TestRegisterApi_Success(t *testing.T) {
 		Enabled:  true,
 	}
 
-	expectedID := domain.ApiID(uuid.New())
+	expectedID := domain.ApiID(1)
 
-	mockRepo.On("Create", mock.AnythingOfType("domain.MonitoredAPI")).Return(expectedID, nil)
+	mockRepo.On("Create", mock.AnythingOfType("domain.MonitoredAPI")).
+		Return(expectedID, nil)
 
 	id, err := service.RegisterApi(api)
 
 	assert.NoError(t, err)
 	assert.Equal(t, expectedID, id)
 	mockRepo.AssertExpectations(t)
-
 }
 
 func TestRegisterApi_InvalidInterval(t *testing.T) {
@@ -49,15 +50,16 @@ func TestRegisterApi_InvalidInterval(t *testing.T) {
 	service := NewService(mockRepo)
 
 	api := domain.MonitoredAPI{
-		Name:     "Invalid url",
+		Name:     "Invalid API",
 		URL:      "https://example.com",
 		Method:   "GET",
 		Interval: 0,
 	}
+
 	id, err := service.RegisterApi(api)
 
 	assert.Error(t, err)
-	assert.Equal(t, domain.ApiID{}, id)
+	assert.Equal(t, domain.ApiID(0), id)
 	assert.Contains(t, err.Error(), "interval must be greater than zero")
 	mockRepo.AssertNotCalled(t, "Create", mock.Anything)
 }
@@ -74,8 +76,9 @@ func TestRegisterApi_ValidationFails(t *testing.T) {
 	}
 
 	id, err := service.RegisterApi(api)
+
 	assert.Error(t, err)
-	assert.Equal(t, domain.ApiID{}, id)
+	assert.Equal(t, domain.ApiID(0), id)
 	mockRepo.AssertNotCalled(t, "Create", mock.Anything)
 }
 
@@ -84,21 +87,21 @@ func TestRegisterApi_RepoError(t *testing.T) {
 	service := NewService(mockRepo)
 
 	api := domain.MonitoredAPI{
-		Name:     "example api",
+		Name:     "Example API",
 		URL:      "https://example.com",
 		Method:   "GET",
 		Interval: 10 * time.Second,
 	}
+
 	expectedError := errors.New("database unavailable")
 
-	mockRepo.
-		On("Create", mock.AnythingOfType("domain.MonitoredAPI")).
-		Return(domain.ApiID{}, expectedError)
+	mockRepo.On("Create", mock.AnythingOfType("domain.MonitoredAPI")).
+		Return(domain.ApiID(0), expectedError)
 
 	id, err := service.RegisterApi(api)
 
 	assert.Error(t, err)
 	assert.Equal(t, expectedError, err)
-	assert.Equal(t, domain.ApiID{}, id)
+	assert.Equal(t, domain.ApiID(0), id)
 	mockRepo.AssertExpectations(t)
 }

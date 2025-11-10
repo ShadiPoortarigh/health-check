@@ -16,10 +16,10 @@ func NewService(repo port.Repo) port.Service {
 
 func (s *service) RegisterApi(api domain.MonitoredAPI) (domain.ApiID, error) {
 	if err := api.Validate(); err != nil {
-		return domain.ApiID{}, err
+		return domain.ApiID(0), err
 	}
 	if api.Interval == 0 {
-		return domain.ApiID{}, errors.New("interval must be greater than zero")
+		return domain.ApiID(0), errors.New("interval must be greater than zero")
 	}
 	return s.repo.Create(api)
 }
