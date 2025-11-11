@@ -17,7 +17,7 @@ func makeValidConfig() config.Config {
 			Schema:   "public",
 		},
 		Server: config.ServerConfig{
-			Port: 8080,
+			HttpPort: 8080,
 		},
 	}
 }
@@ -36,9 +36,17 @@ func TestNewApp(t *testing.T) {
 	if a.Config().DB.Host != "localhost" {
 		t.Errorf("expected host localhost, got %s", a.Config().DB.Host)
 	}
+
+	if a.DB() == nil {
+		t.Error("expected non-nil DB connection")
+	}
+
+	if a.HealthCheck() == nil {
+		t.Error("expected non-nil HealthCheck service")
+	}
 }
 
-func TestMustNewApp_PanicsOnError(t *testing.T) {
+func TestMustNewApp(t *testing.T) {
 	defer func() {
 		if r := recover(); r == nil {
 			t.Error("expected panic")

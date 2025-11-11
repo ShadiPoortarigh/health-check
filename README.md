@@ -14,7 +14,7 @@
 #### Connect to database
 > psql -h localhost -p 5432 -U admin -d "health-check";
 
-#### Create table
+#### Create table and grant permissions
 ```
 CREATE TABLE monitored_apis (
     id SERIAL PRIMARY KEY,
@@ -33,5 +33,8 @@ CREATE TABLE monitored_apis (
     webhook_headers JSONB
 );
 
-
+>>> sudo -i -u postgres
+>>> psql -U postgres -d "health-check"
+>>> grant select, insert, update, delete on table monitored_apis to admin;
+>>> grant usage, select on sequence monitored_apis_id_seq to admin;
 ```

@@ -14,6 +14,10 @@ func NewService(repo port.Repo) port.Service {
 	return &service{repo: repo}
 }
 
+var (
+	ErrAPIRegistrationValidation = errors.New("API validation failed")
+)
+
 func (s *service) RegisterApi(api domain.MonitoredAPI) (domain.ApiID, error) {
 	if err := api.Validate(); err != nil {
 		return domain.ApiID(0), err

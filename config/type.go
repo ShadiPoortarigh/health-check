@@ -15,5 +15,5 @@ type DBConfig struct {
 }
 
 type ServerConfig struct {
-	Port int `json:"port"`
+	HttpPort int `json:"httpPort"`
 }

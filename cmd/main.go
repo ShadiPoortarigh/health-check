@@ -3,8 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"health-check/api/handlers/http"
 	"health-check/app"
 	"health-check/config"
+	"log"
 	"os"
 )
 
@@ -23,6 +25,8 @@ func main() {
 	a := app.MustNewApp(c)
 
 	fmt.Println("app created: ", a)
+
+	log.Fatal(http.Run(a, c.Server))
 
 }
 

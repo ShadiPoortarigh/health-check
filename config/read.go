@@ -11,11 +11,7 @@ func ReadConfig(configPath string) (Config, error) {
 	if err != nil {
 		return c, err
 	}
-	err = json.Unmarshal(data, &c)
-	if err != nil {
-		return c, err
-	}
-	return c, nil
+	return c, json.Unmarshal(data, &c)
 }
 
 func MustReadConfig(configPath string) Config {

@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option go_package="health-check/api/proto";
+
+message Webhook {
+  string url = 1;
+  map<string, string> headers = 2;
+}
+
+message RegisterApiRequest {
+  string name = 1;
+  string url = 2;
+  string method = 3;
+  map<string, string> headers = 4;
+  string body = 5;
+  int64 interval_seconds = 6;
+  bool enabled = 7;
+  Webhook webhook = 8;
+}
+
+message RegisterApiResponse {
+  uint64 id = 1;
+  string url = 2;
+  string method = 3;
+  int64 interval_seconds = 4;
+  bool enabled = 5;
+  string created_at = 6;
+}

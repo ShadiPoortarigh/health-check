@@ -3,12 +3,16 @@ package app
 import (
 	"gorm.io/gorm"
 	"health-check/config"
+	"health-check/internal/monitor_service"
+	"health-check/internal/monitor_service/port"
+	"health-check/pkg/adapters/storage"
 	"health-check/pkg/postgres"
 )
 
 type app struct {
-	db  *gorm.DB
-	cfg config.Config
+	db          *gorm.DB
+	cfg         config.Config
+	healthCheck port.Service
 }
 
 func (a *app) DB() *gorm.DB {
@@ -17,6 +21,9 @@ func (a *app) DB() *gorm.DB {
 
 func (a *app) Config() config.Config {
 	return a.cfg
+}
+func (a *app) HealthCheck() port.Service {
+	return a.healthCheck
 }
 
 func (a *app) SetDB() error {
@@ -42,6 +49,7 @@ func NewApp(cfg config.Config) (App, error) {
 	if err := a.SetDB(); err != nil {
 		return nil, err
 	}
+	a.healthCheck = monitor_service.NewService(storage.NewDomainRepo(a.db))
 	return a, nil
 }
 
