@@ -35,7 +35,7 @@ func (u *MonitorService) RegisterAPI(ctx context.Context, req *proto.RegisterApi
 			Headers: req.GetWebhook().GetHeaders(),
 		},
 	}
-	id, err := u.svc.RegisterApi(api)
+	id, err := u.svc.RegisterApi(ctx, api)
 	if err != nil {
 		return nil, err
 	}

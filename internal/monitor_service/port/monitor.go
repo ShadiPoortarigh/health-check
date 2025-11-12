@@ -1,7 +1,10 @@
 package port
 
-import "health-check/internal/monitor_service/domain"
+import (
+	"context"
+	"health-check/internal/monitor_service/domain"
+)
 
 type Repo interface {
-	Create(api domain.MonitoredAPI) (domain.ApiID, error)
+	Create(ctx context.Context, api domain.MonitoredAPI) (domain.ApiID, error)
 }

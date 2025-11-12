@@ -1,6 +1,7 @@
 package monitor_service
 
 import (
+	"context"
 	"errors"
 	"health-check/internal/monitor_service/domain"
 	"health-check/internal/monitor_service/port"
@@ -18,12 +19,12 @@ var (
 	ErrAPIRegistrationValidation = errors.New("API validation failed")
 )
 
-func (s *service) RegisterApi(api domain.MonitoredAPI) (domain.ApiID, error) {
+func (s *service) RegisterApi(ctx context.Context, api domain.MonitoredAPI) (domain.ApiID, error) {
 	if err := api.Validate(); err != nil {
 		return domain.ApiID(0), err
 	}
 	if api.Interval == 0 {
 		return domain.ApiID(0), errors.New("interval must be greater than zero")
 	}
-	return s.repo.Create(api)
+	return s.repo.Create(ctx, api)
 }

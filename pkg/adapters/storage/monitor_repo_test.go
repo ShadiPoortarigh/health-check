@@ -1,14 +1,14 @@
 package storage
 
 import (
-	"health-check/internal/monitor_service/domain"
-	"testing"
-	"time"
-
+	"context"
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"health-check/internal/monitor_service/domain"
+	"testing"
+	"time"
 )
 
 func newMockDB(t *testing.T) (*gorm.DB, sqlmock.Sqlmock) {
@@ -29,8 +29,10 @@ func TestMonitorRepo_Create_Success(t *testing.T) {
 	gdb, mock := newMockDB(t)
 	repo := NewDomainRepo(gdb)
 
+	ctx := context.Background()
+
 	api := domain.MonitoredAPI{
-		ID:       0, // new record
+		ID:       0,
 		URL:      "https://example.com",
 		Method:   "GET",
 		Headers:  map[string]string{"Authorization": "Bearer token"},
@@ -64,7 +66,7 @@ func TestMonitorRepo_Create_Success(t *testing.T) {
 		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
 	mock.ExpectCommit()
 
-	id, err := repo.Create(api)
+	id, err := repo.Create(ctx, api)
 
 	assert.NoError(t, err)
 	assert.Equal(t, domain.ApiID(1), id)
@@ -72,9 +74,10 @@ func TestMonitorRepo_Create_Success(t *testing.T) {
 }
 
 func TestMonitorRepo_Create_Failure(t *testing.T) {
-	// Arrange
 	gdb, mock := newMockDB(t)
 	repo := NewDomainRepo(gdb)
+
+	ctx := context.Background()
 
 	api := domain.MonitoredAPI{
 		URL:      "https://example.com",
@@ -88,7 +91,7 @@ func TestMonitorRepo_Create_Failure(t *testing.T) {
 		WillReturnError(assert.AnError)
 	mock.ExpectRollback()
 
-	id, err := repo.Create(api)
+	id, err := repo.Create(ctx, api)
 
 	assert.Error(t, err)
 	assert.Equal(t, domain.ApiID(0), id)

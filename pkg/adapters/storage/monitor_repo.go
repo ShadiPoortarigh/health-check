@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"context"
 	"gorm.io/gorm"
 	"health-check/internal/monitor_service/domain"
 	"health-check/internal/monitor_service/port"
@@ -15,8 +16,8 @@ func NewDomainRepo(db *gorm.DB) port.Repo {
 	return &monitorRepo{db: db}
 }
 
-func (m *monitorRepo) Create(api domain.MonitoredAPI) (domain.ApiID, error) {
+func (m *monitorRepo) Create(ctx context.Context, api domain.MonitoredAPI) (domain.ApiID, error) {
 
 	monitor := mapper.MonitorDomain2Storage(api)
-	return domain.ApiID(monitor.ID), m.db.Table("monitored_apis").Create(monitor).Error
+	return domain.ApiID(monitor.ID), m.db.Table("monitored_apis").WithContext(ctx).Create(monitor).Error
 }

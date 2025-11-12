@@ -2,33 +2,36 @@ package http_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"health-check/api/handlers/http"
+	apihttp "health-check/api/handlers/http"
+	"health-check/api/proto"
 	"health-check/api/service"
 	"health-check/internal/monitor_service/domain"
 	"health-check/internal/monitor_service/port"
 	"net/http/httptest"
 	"testing"
-
-	"health-check/api/proto"
 )
 
 type mockService struct {
 	mock.Mock
 }
 
-func (m *mockService) RegisterApi(api domain.MonitoredAPI) (domain.ApiID, error) {
-	args := m.Called(api)
+func (m *mockService) RegisterApi(ctx context.Context, api domain.MonitoredAPI) (domain.ApiID, error) {
+	args := m.Called(ctx, api)
 	return args.Get(0).(domain.ApiID), args.Error(1)
 }
 
 func setupTestApp(svc port.Service) *fiber.App {
 	app := fiber.New()
-	app.Post("/api/v1/register", http.RegisterAPI(service.NewMonitorService(svc)))
+	getSvc := func(ctx context.Context) *service.MonitorService {
+		return service.NewMonitorService(svc)
+	}
+	app.Post("/api/v1/register", apihttp.RegisterAPI(getSvc))
 	return app
 }
 
@@ -50,7 +53,7 @@ func TestRegisterAPI_Success(t *testing.T) {
 		},
 	}
 
-	mockSvc.On("RegisterApi", mock.AnythingOfType("domain.MonitoredAPI")).
+	mockSvc.On("RegisterApi", mock.Anything, mock.AnythingOfType("domain.MonitoredAPI")).
 		Return(domain.ApiID(1), nil)
 
 	body, _ := json.Marshal(reqBody)
@@ -58,7 +61,6 @@ func TestRegisterAPI_Success(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, _ := app.Test(req, -1)
-
 	assert.Equal(t, fiber.StatusOK, resp.StatusCode)
 
 	var parsed proto.RegisterApiResponse
@@ -89,7 +91,7 @@ func TestRegisterAPI_ValidationError(t *testing.T) {
 		Name: "Broken API",
 	}
 
-	mockSvc.On("RegisterApi", mock.AnythingOfType("domain.MonitoredAPI")).
+	mockSvc.On("RegisterApi", mock.Anything, mock.AnythingOfType("domain.MonitoredAPI")).
 		Return(domain.ApiID(0), errors.New("interval must be greater than zero"))
 
 	body, _ := json.Marshal(reqBody)

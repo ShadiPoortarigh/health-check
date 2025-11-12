@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"gorm.io/gorm"
 	"health-check/config"
 	"health-check/internal/monitor_service"
@@ -22,7 +23,7 @@ func (a *app) DB() *gorm.DB {
 func (a *app) Config() config.Config {
 	return a.cfg
 }
-func (a *app) HealthCheck() port.Service {
+func (a *app) HealthCheck(ctx context.Context) port.Service {
 	return a.healthCheck
 }
 

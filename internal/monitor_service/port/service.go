@@ -1,7 +1,10 @@
 package port
 
-import "health-check/internal/monitor_service/domain"
+import (
+	"context"
+	"health-check/internal/monitor_service/domain"
+)
 
 type Service interface {
-	RegisterApi(api domain.MonitoredAPI) (domain.ApiID, error)
+	RegisterApi(ctx context.Context, api domain.MonitoredAPI) (domain.ApiID, error)
 }

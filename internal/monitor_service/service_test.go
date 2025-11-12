@@ -1,6 +1,7 @@
 package monitor_service
 
 import (
+	"context"
 	"errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -13,17 +14,16 @@ type MockRepo struct {
 	mock.Mock
 }
 
-func (m *MockRepo) Create(api domain.MonitoredAPI) (domain.ApiID, error) {
-	args := m.Called(api)
+func (m *MockRepo) Create(ctx context.Context, api domain.MonitoredAPI) (domain.ApiID, error) {
+	args := m.Called(ctx, api)
 	return args.Get(0).(domain.ApiID), args.Error(1)
 }
 
-// ---- Tests ----
-
-// Happy path
 func TestRegisterApi_Success(t *testing.T) {
 	mockRepo := new(MockRepo)
 	service := NewService(mockRepo)
+
+	ctx := context.Background()
 
 	api := domain.MonitoredAPI{
 		Name:     "Example API",
@@ -35,10 +35,10 @@ func TestRegisterApi_Success(t *testing.T) {
 
 	expectedID := domain.ApiID(1)
 
-	mockRepo.On("Create", mock.AnythingOfType("domain.MonitoredAPI")).
+	mockRepo.On("Create", mock.Anything, mock.AnythingOfType("domain.MonitoredAPI")).
 		Return(expectedID, nil)
 
-	id, err := service.RegisterApi(api)
+	id, err := service.RegisterApi(ctx, api)
 
 	assert.NoError(t, err)
 	assert.Equal(t, expectedID, id)
@@ -49,6 +49,8 @@ func TestRegisterApi_InvalidInterval(t *testing.T) {
 	mockRepo := new(MockRepo)
 	service := NewService(mockRepo)
 
+	ctx := context.Background()
+
 	api := domain.MonitoredAPI{
 		Name:     "Invalid API",
 		URL:      "https://example.com",
@@ -56,17 +58,19 @@ func TestRegisterApi_InvalidInterval(t *testing.T) {
 		Interval: 0,
 	}
 
-	id, err := service.RegisterApi(api)
+	id, err := service.RegisterApi(ctx, api)
 
 	assert.Error(t, err)
 	assert.Equal(t, domain.ApiID(0), id)
 	assert.Contains(t, err.Error(), "interval must be greater than zero")
-	mockRepo.AssertNotCalled(t, "Create", mock.Anything)
+	mockRepo.AssertNotCalled(t, "Create", mock.Anything, mock.Anything)
 }
 
 func TestRegisterApi_ValidationFails(t *testing.T) {
 	mockRepo := new(MockRepo)
 	service := NewService(mockRepo)
+
+	ctx := context.Background()
 
 	api := domain.MonitoredAPI{
 		Name:     "",
@@ -75,16 +79,18 @@ func TestRegisterApi_ValidationFails(t *testing.T) {
 		Interval: 10 * time.Second,
 	}
 
-	id, err := service.RegisterApi(api)
+	id, err := service.RegisterApi(ctx, api)
 
 	assert.Error(t, err)
 	assert.Equal(t, domain.ApiID(0), id)
-	mockRepo.AssertNotCalled(t, "Create", mock.Anything)
+	mockRepo.AssertNotCalled(t, "Create", mock.Anything, mock.Anything)
 }
 
 func TestRegisterApi_RepoError(t *testing.T) {
 	mockRepo := new(MockRepo)
 	service := NewService(mockRepo)
+
+	ctx := context.Background()
 
 	api := domain.MonitoredAPI{
 		Name:     "Example API",
@@ -95,10 +101,10 @@ func TestRegisterApi_RepoError(t *testing.T) {
 
 	expectedError := errors.New("database unavailable")
 
-	mockRepo.On("Create", mock.AnythingOfType("domain.MonitoredAPI")).
+	mockRepo.On("Create", mock.Anything, mock.AnythingOfType("domain.MonitoredAPI")).
 		Return(domain.ApiID(0), expectedError)
 
-	id, err := service.RegisterApi(api)
+	id, err := service.RegisterApi(ctx, api)
 
 	assert.Error(t, err)
 	assert.Equal(t, expectedError, err)

@@ -7,12 +7,14 @@ import (
 	"health-check/api/service"
 )
 
-func RegisterAPI(svc *service.MonitorService) fiber.Handler {
+func RegisterAPI(getSvc ContextGetter[*service.MonitorService]) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		var req proto.RegisterApiRequest
 		if err := c.BodyParser(&req); err != nil {
 			return fiber.ErrBadRequest
 		}
+		ctx := c.UserContext()
+		svc := getSvc(ctx)
 		resp, err := svc.RegisterAPI(c.UserContext(), &req)
 		if err != nil {
 			if errors.Is(err, service.ErrAPIRegistrationValidation) {

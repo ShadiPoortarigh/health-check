@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"health-check/config"
 	"os"
 	"testing"
@@ -41,7 +42,8 @@ func TestNewApp(t *testing.T) {
 		t.Error("expected non-nil DB connection")
 	}
 
-	if a.HealthCheck() == nil {
+	ctx := context.Background()
+	if a.HealthCheck(ctx) == nil {
 		t.Error("expected non-nil HealthCheck service")
 	}
 }
