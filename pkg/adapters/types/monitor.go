@@ -19,3 +19,15 @@ type MonitoredAPIDB struct {
 	WebhookURL     string         `gorm:"column:webhook_url" json:"webhook_url"`
 	WebhookHeaders datatypes.JSON `gorm:"column:webhook_headers" json:"webhook_headers"`
 }
+
+type CheckResultDB struct {
+	ID                 uint      `gorm:"primaryKey"`
+	ApiID              uint      `gorm:"column:api_id"`
+	Timestamp          time.Time `gorm:"column:timestamp"`
+	StatusCode         int       `gorm:"column:status_code"`
+	Success            bool      `gorm:"column:success"`
+	ResponseTimeMillis int64     `gorm:"column:response_time_ms"`
+	ResponseSnippet    string    `gorm:"column:response_snippet"`
+	ErrorMessage       string    `gorm:"column:error_message"`
+	CreatedAt          time.Time `gorm:"column:created_at"`
+}

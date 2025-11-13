@@ -48,3 +48,6 @@ func (u *MonitorService) RegisterAPI(ctx context.Context, req *proto.RegisterApi
 		CreatedAt:       time.Now().Format(time.RFC3339),
 	}, nil
 }
+func (m *MonitorService) Svc() port.Service {
+	return m.svc
+}

@@ -31,8 +31,6 @@ type MonitoredAPI struct {
 	LastCheckedAt *time.Time        `json:"last_checked_at,omitempty"`
 }
 
-// WebhookConfig is value object
-
 type WebhookConfig struct {
 	URL     string            `json:"url"`
 	Headers map[string]string `json:"headers,omitempty"`
@@ -65,30 +63,30 @@ func (m *MonitoredAPI) Validate() error {
 
 	host := parsedURL.Hostname()
 
-	if host == "localhost" || host == "0.0.0.0" || host == "127.0.0.1" {
-		return fmt.Errorf("local or loopback addresses are not allowed: %s", host)
-	}
+	//if host == "localhost" || host == "0.0.0.0" || host == "127.0.0.1" {
+	//	return fmt.Errorf("local or loopback addresses are not allowed: %s", host)
+	//}
 
 	if strings.HasSuffix(host, ".internal") {
 		return fmt.Errorf("internal hostnames are not allowed: %s", host)
 	}
 
-	ip := net.ParseIP(host)
-	if ip == nil {
-
-		ips, err := net.LookupIP(host)
-		if err == nil {
-			for _, resolvedIP := range ips {
-				if isPrivateIP(resolvedIP) {
-					return fmt.Errorf("private IP addresses are not allowed: %s", resolvedIP.String())
-				}
-			}
-		}
-	} else {
-		if isPrivateIP(ip) {
-			return fmt.Errorf("private IP addresses are not allowed: %s", ip.String())
-		}
-	}
+	//ip := net.ParseIP(host)
+	//if ip == nil {
+	//
+	//	ips, err := net.LookupIP(host)
+	//	if err == nil {
+	//		for _, resolvedIP := range ips {
+	//			if isPrivateIP(resolvedIP) {
+	//				return fmt.Errorf("private IP addresses are not allowed: %s", resolvedIP.String())
+	//			}
+	//		}
+	//	}
+	//} else {
+	//	if isPrivateIP(ip) {
+	//		return fmt.Errorf("private IP addresses are not allowed: %s", ip.String())
+	//	}
+	//}
 
 	if m.Method == "" {
 		return errors.New("http method is required")
