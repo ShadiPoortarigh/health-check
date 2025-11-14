@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: healthcheck-db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 12qw!@QW
+      POSTGRES_DB: healthcheck
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  migrate:
+    image: migrate/migrate:latest
+    container_name: healthcheck-migrations
+    depends_on:
+      - db
+    volumes:
+      - ../migrations:/migrations
+    command: [
+      "-path=/migrations",
+      "-database=postgres://admin:12qw%21%40QW@db:5432/healthcheck?sslmode=disable",
+      "up"
+    ]
+    restart: "on-failure"
+
+  app:
+    build:
+      context: ..
+      dockerfile: build/Dockerfile
+    container_name: healthcheck-app
+    depends_on:
+      - db
+      - migrate
+    environment:
+      DATABASE_URL: postgres://admin:12qw%21%40QW@db:5432/healthcheck?sslmode=disable
+    ports:
+      - "8080:8080"
+    working_dir: /root
+    command: ["./healthcheck-app", "--config", "sample-config.json"]
+
+volumes:
+  db_data:
+
