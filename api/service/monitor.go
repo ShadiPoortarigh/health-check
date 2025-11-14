@@ -88,3 +88,16 @@ func (u *MonitorService) ListAPIs(ctx context.Context, req *proto.ListApisReques
 
 	return resp, nil
 }
+
+func (m *MonitorService) DeleteAPI(ctx context.Context, req *proto.DeleteApiRequest) (*proto.DeleteApiResponse, error) {
+
+	id := domain.ApiID(req.GetId())
+
+	if err := m.svc.DeleteApi(ctx, id); err != nil {
+		return nil, err
+	}
+
+	return &proto.DeleteApiResponse{
+		Success: true,
+	}, nil
+}

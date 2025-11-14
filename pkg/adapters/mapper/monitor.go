@@ -9,11 +9,11 @@ import (
 	"time"
 )
 
-func MonitorDomain2Storage(monitorDomain domain.MonitoredAPI) *types.MonitoredAPIDB {
+func MonitorDomain2Storage(monitorDomain domain.MonitoredAPI) *types.MonitoredAPI {
 	headersJSON, _ := json.Marshal(monitorDomain.Headers)
 	webhookHeadersJSON, _ := json.Marshal(monitorDomain.Webhook.Headers)
 
-	return &types.MonitoredAPIDB{
+	return &types.MonitoredAPI{
 		Model: gorm.Model{
 			ID:        uint(monitorDomain.ID),
 			CreatedAt: time.Now(),
@@ -39,7 +39,7 @@ func nullableString(s string) *string {
 	return &s
 }
 
-func MonitorStorage2Domain(apiDB types.MonitoredAPIDB) (*domain.MonitoredAPI, error) {
+func MonitorStorage2Domain(apiDB types.MonitoredAPI) (*domain.MonitoredAPI, error) {
 	var headers, webhookHeaders map[string]string
 	if err := json.Unmarshal(apiDB.Headers, &headers); err != nil {
 		return nil, err

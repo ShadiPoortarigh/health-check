@@ -82,3 +82,32 @@ func ListAPIs(getSvc ContextGetter[*service.MonitorService]) fiber.Handler {
 		return c.JSON(resp)
 	}
 }
+
+func DeleteAPI(getSvc ContextGetter[*service.MonitorService]) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+
+		ctx := c.UserContext()
+		svc := getSvc(ctx)
+
+		idParam := c.Params("api_id")
+		if idParam == "" {
+			return fiber.NewError(fiber.StatusBadRequest, "missing api_id")
+		}
+
+		id, err := strconv.ParseUint(idParam, 10, 64)
+		if err != nil {
+			return fiber.NewError(fiber.StatusBadRequest, "invalid api_id")
+		}
+
+		req := &proto.DeleteApiRequest{
+			Id: id,
+		}
+
+		resp, err := svc.DeleteAPI(ctx, req)
+		if err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		}
+
+		return c.JSON(resp)
+	}
+}

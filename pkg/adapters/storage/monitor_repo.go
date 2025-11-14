@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"errors"
+	"fmt"
 	"gorm.io/gorm"
 	"health-check/internal/monitor_service/domain"
 	"health-check/internal/monitor_service/port"
@@ -25,7 +26,7 @@ func (m *monitorRepo) Create(ctx context.Context, api domain.MonitoredAPI) (doma
 }
 
 func (m *monitorRepo) GetByID(ctx context.Context, id domain.ApiID) (*domain.MonitoredAPI, error) {
-	var apiDB types.MonitoredAPIDB
+	var apiDB types.MonitoredAPI
 
 	err := m.db.WithContext(ctx).
 		Table("monitored_apis").
@@ -53,7 +54,7 @@ func (m *monitorRepo) SaveCheckResult(ctx context.Context, result domain.CheckRe
 }
 
 func (m *monitorRepo) ListAll(ctx context.Context) ([]domain.MonitoredAPI, error) {
-	var dbRows []types.MonitoredAPIDB
+	var dbRows []types.MonitoredAPI
 
 	err := m.db.WithContext(ctx).
 		Table("monitored_apis").
@@ -76,4 +77,14 @@ func (m *monitorRepo) ListAll(ctx context.Context) ([]domain.MonitoredAPI, error
 	}
 
 	return result, nil
+}
+func (r *monitorRepo) Delete(ctx context.Context, id domain.ApiID) error {
+	result := r.db.WithContext(ctx).Delete(&types.MonitoredAPI{}, id)
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return fmt.Errorf("api %d not found", id)
+	}
+	return nil
 }

@@ -460,6 +460,94 @@ func (x *ListApisResponse) GetApis() []*MonitoredApi {
 	return nil
 }
 
+type DeleteApiRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            uint64                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteApiRequest) Reset() {
+	*x = DeleteApiRequest{}
+	mi := &file_monitor_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteApiRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteApiRequest) ProtoMessage() {}
+
+func (x *DeleteApiRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_monitor_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteApiRequest.ProtoReflect.Descriptor instead.
+func (*DeleteApiRequest) Descriptor() ([]byte, []int) {
+	return file_monitor_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *DeleteApiRequest) GetId() uint64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+type DeleteApiResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteApiResponse) Reset() {
+	*x = DeleteApiResponse{}
+	mi := &file_monitor_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteApiResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteApiResponse) ProtoMessage() {}
+
+func (x *DeleteApiResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_monitor_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteApiResponse.ProtoReflect.Descriptor instead.
+func (*DeleteApiResponse) Descriptor() ([]byte, []int) {
+	return file_monitor_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *DeleteApiResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
 var File_monitor_proto protoreflect.FileDescriptor
 
 var file_monitor_proto_rawDesc = []byte{
@@ -534,9 +622,14 @@ var file_monitor_proto_rawDesc = []byte{
 	0x3a, 0x02, 0x38, 0x01, 0x22, 0x35, 0x0a, 0x10, 0x4c, 0x69, 0x73, 0x74, 0x41, 0x70, 0x69, 0x73,
 	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x21, 0x0a, 0x04, 0x61, 0x70, 0x69, 0x73,
 	0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0d, 0x2e, 0x4d, 0x6f, 0x6e, 0x69, 0x74, 0x6f, 0x72,
-	0x65, 0x64, 0x41, 0x70, 0x69, 0x52, 0x04, 0x61, 0x70, 0x69, 0x73, 0x42, 0x18, 0x5a, 0x16, 0x68,
-	0x65, 0x61, 0x6c, 0x74, 0x68, 0x2d, 0x63, 0x68, 0x65, 0x63, 0x6b, 0x2f, 0x61, 0x70, 0x69, 0x2f,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x65, 0x64, 0x41, 0x70, 0x69, 0x52, 0x04, 0x61, 0x70, 0x69, 0x73, 0x22, 0x22, 0x0a, 0x10, 0x44,
+	0x65, 0x6c, 0x65, 0x74, 0x65, 0x41, 0x70, 0x69, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x02, 0x69, 0x64, 0x22,
+	0x2d, 0x0a, 0x11, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x41, 0x70, 0x69, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73, 0x42, 0x18,
+	0x5a, 0x16, 0x68, 0x65, 0x61, 0x6c, 0x74, 0x68, 0x2d, 0x63, 0x68, 0x65, 0x63, 0x6b, 0x2f, 0x61,
+	0x70, 0x69, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -551,7 +644,7 @@ func file_monitor_proto_rawDescGZIP() []byte {
 	return file_monitor_proto_rawDescData
 }
 
-var file_monitor_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_monitor_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_monitor_proto_goTypes = []any{
 	(*Webhook)(nil),             // 0: Webhook
 	(*RegisterApiRequest)(nil),  // 1: RegisterApiRequest
@@ -559,22 +652,24 @@ var file_monitor_proto_goTypes = []any{
 	(*ListApisRequest)(nil),     // 3: ListApisRequest
 	(*MonitoredApi)(nil),        // 4: MonitoredApi
 	(*ListApisResponse)(nil),    // 5: ListApisResponse
-	nil,                         // 6: Webhook.HeadersEntry
-	nil,                         // 7: RegisterApiRequest.HeadersEntry
-	nil,                         // 8: MonitoredApi.HeadersEntry
+	(*DeleteApiRequest)(nil),    // 6: DeleteApiRequest
+	(*DeleteApiResponse)(nil),   // 7: DeleteApiResponse
+	nil,                         // 8: Webhook.HeadersEntry
+	nil,                         // 9: RegisterApiRequest.HeadersEntry
+	nil,                         // 10: MonitoredApi.HeadersEntry
 }
 var file_monitor_proto_depIdxs = []int32{
-	6, // 0: Webhook.headers:type_name -> Webhook.HeadersEntry
-	7, // 1: RegisterApiRequest.headers:type_name -> RegisterApiRequest.HeadersEntry
-	0, // 2: RegisterApiRequest.webhook:type_name -> Webhook
-	8, // 3: MonitoredApi.headers:type_name -> MonitoredApi.HeadersEntry
-	0, // 4: MonitoredApi.webhook:type_name -> Webhook
-	4, // 5: ListApisResponse.apis:type_name -> MonitoredApi
-	6, // [6:6] is the sub-list for method output_type
-	6, // [6:6] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	8,  // 0: Webhook.headers:type_name -> Webhook.HeadersEntry
+	9,  // 1: RegisterApiRequest.headers:type_name -> RegisterApiRequest.HeadersEntry
+	0,  // 2: RegisterApiRequest.webhook:type_name -> Webhook
+	10, // 3: MonitoredApi.headers:type_name -> MonitoredApi.HeadersEntry
+	0,  // 4: MonitoredApi.webhook:type_name -> Webhook
+	4,  // 5: ListApisResponse.apis:type_name -> MonitoredApi
+	6,  // [6:6] is the sub-list for method output_type
+	6,  // [6:6] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_monitor_proto_init() }
@@ -588,7 +683,7 @@ func file_monitor_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_monitor_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -46,3 +46,11 @@ message MonitoredApi {
 message ListApisResponse {
   repeated MonitoredApi apis = 1;
 }
+
+message DeleteApiRequest {
+  uint64 id = 1;
+}
+
+message DeleteApiResponse {
+  bool success = 1;
+}

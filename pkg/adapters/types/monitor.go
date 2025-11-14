@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type MonitoredAPIDB struct {
+type MonitoredAPI struct {
 	gorm.Model
 	URL            string         `gorm:"column:url" json:"url"`
 	Method         string         `gorm:"column:method" json:"method"`

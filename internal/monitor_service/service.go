@@ -139,3 +139,15 @@ func sendWebhookWithRetry(ctx context.Context, webhook domain.WebhookConfig, res
 func (s *service) ListAll(ctx context.Context) ([]domain.MonitoredAPI, error) {
 	return s.repo.ListAll(ctx)
 }
+
+func (s *service) DeleteApi(ctx context.Context, id domain.ApiID) error {
+	api, err := s.repo.GetByID(ctx, id)
+	if err != nil {
+		return err
+	}
+	if api == nil {
+		return fmt.Errorf("api %d not found", id)
+	}
+
+	return s.repo.Delete(ctx, id)
+}

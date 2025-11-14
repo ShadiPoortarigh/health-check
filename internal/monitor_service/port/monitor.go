@@ -10,4 +10,5 @@ type Repo interface {
 	GetByID(ctx context.Context, id domain.ApiID) (*domain.MonitoredAPI, error)
 	SaveCheckResult(ctx context.Context, result domain.CheckResult) error
 	ListAll(ctx context.Context) ([]domain.MonitoredAPI, error)
+	Delete(ctx context.Context, id domain.ApiID) error
 }

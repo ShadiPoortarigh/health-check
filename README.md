@@ -104,11 +104,16 @@ CREATE TABLE check_result_db (
 
 #### health-check API
 ```
-POST  http://localhost:8080/api/v1/api_id/start
+POST  http://localhost:8080/api/v1/:api_id/start
 
 ```
 
 #### list api
 ```
 GET  http://localhost:8080/api/v1/apis
+```
+
+#### delete api
+```
+DELETE  http://localhost:8080/api/v1/delete/:api_id
 ```
