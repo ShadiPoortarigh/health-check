@@ -26,3 +26,23 @@ message RegisterApiResponse {
   bool enabled = 5;
   string created_at = 6;
 }
+
+message ListApisRequest {}
+
+message MonitoredApi {
+  uint64 id = 1;
+  string name = 2;
+  string url = 3;
+  string method = 4;
+  map<string, string> headers = 5;
+  string body = 6;
+  int64 interval_seconds = 7;
+  bool enabled = 8;
+  Webhook webhook = 9;
+  string last_status = 10;
+  string last_checked_at = 11; // RFC3339 timestamp
+}
+
+message ListApisResponse {
+  repeated MonitoredApi apis = 1;
+}

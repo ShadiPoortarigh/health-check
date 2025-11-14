@@ -66,7 +66,7 @@ CREATE TABLE check_result_db (
 
 #### register API 
 ```
- http://localhost:8080/api/v1/register/
+ POST  http://localhost:8080/api/v1/register/
 
  {
   "name": "User Service Health",
@@ -104,6 +104,11 @@ CREATE TABLE check_result_db (
 
 #### health-check API
 ```
-http://localhost:8080/api/v1/api_id/start
+POST  http://localhost:8080/api/v1/api_id/start
 
+```
+
+#### list api
+```
+GET  http://localhost:8080/api/v1/apis
 ```

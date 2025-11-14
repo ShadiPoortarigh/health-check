@@ -51,3 +51,29 @@ func (m *monitorRepo) SaveCheckResult(ctx context.Context, result domain.CheckRe
 	row := mapper.ResultDomain2Storage(result)
 	return m.db.WithContext(ctx).Table("check_result_db").Create(&row).Error
 }
+
+func (m *monitorRepo) ListAll(ctx context.Context) ([]domain.MonitoredAPI, error) {
+	var dbRows []types.MonitoredAPIDB
+
+	err := m.db.WithContext(ctx).
+		Table("monitored_apis").
+		Find(&dbRows).Error
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	result := make([]domain.MonitoredAPI, 0, len(dbRows))
+	for _, r := range dbRows {
+		dom, err := mapper.MonitorStorage2Domain(r)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, *dom)
+	}
+
+	return result, nil
+}

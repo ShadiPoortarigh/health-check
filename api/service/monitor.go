@@ -51,3 +51,40 @@ func (u *MonitorService) RegisterAPI(ctx context.Context, req *proto.RegisterApi
 func (m *MonitorService) Svc() port.Service {
 	return m.svc
 }
+
+func (u *MonitorService) ListAPIs(ctx context.Context, req *proto.ListApisRequest) (*proto.ListApisResponse, error) {
+	apis, err := u.svc.ListAll(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &proto.ListApisResponse{
+		Apis: make([]*proto.MonitoredApi, 0, len(apis)),
+	}
+
+	for _, a := range apis {
+		var lastCheckedAt string
+		if a.LastCheckedAt != nil {
+			lastCheckedAt = a.LastCheckedAt.Format(time.RFC3339)
+		}
+
+		resp.Apis = append(resp.Apis, &proto.MonitoredApi{
+			Id:              uint64(a.ID),
+			Name:            a.Name,
+			Url:             a.URL,
+			Method:          a.Method,
+			Headers:         a.Headers,
+			Body:            a.Body,
+			IntervalSeconds: int64(a.Interval.Seconds()),
+			Enabled:         a.Enabled,
+			Webhook: &proto.Webhook{
+				Url:     a.Webhook.URL,
+				Headers: a.Webhook.Headers,
+			},
+			LastStatus:    a.LastStatus,
+			LastCheckedAt: lastCheckedAt,
+		})
+	}
+
+	return resp, nil
+}

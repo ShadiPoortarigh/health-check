@@ -135,3 +135,7 @@ func sendWebhookWithRetry(ctx context.Context, webhook domain.WebhookConfig, res
 
 	return fmt.Errorf("failed to send webhook after %d retries", maxRetries)
 }
+
+func (s *service) ListAll(ctx context.Context) ([]domain.MonitoredAPI, error) {
+	return s.repo.ListAll(ctx)
+}

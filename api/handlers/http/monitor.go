@@ -51,7 +51,7 @@ func StartAPIHandler(
 
 		ctx := c.UserContext()
 		monitorSvc := getSvc(ctx)
-		
+
 		schedulerSvc := service.NewSchedulerService(monitorSvc.Svc(), schedulerRunner)
 
 		if err := schedulerSvc.Start(ctx, apiID, duration); err != nil {
@@ -63,5 +63,22 @@ func StartAPIHandler(
 			"api_id":   apiID,
 			"duration": duration.Seconds(),
 		})
+	}
+}
+
+func ListAPIs(getSvc ContextGetter[*service.MonitorService]) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+
+		ctx := c.UserContext()
+		svc := getSvc(ctx)
+
+		req := &proto.ListApisRequest{}
+
+		resp, err := svc.ListAPIs(ctx, req)
+		if err != nil {
+			return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		}
+
+		return c.JSON(resp)
 	}
 }

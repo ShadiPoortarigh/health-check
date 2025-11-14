@@ -9,4 +9,5 @@ import (
 type Service interface {
 	RegisterApi(ctx context.Context, api domain.MonitoredAPI) (domain.ApiID, error)
 	common.SchedulerHandler[domain.MonitoredAPI]
+	ListAll(ctx context.Context) ([]domain.MonitoredAPI, error)
 }

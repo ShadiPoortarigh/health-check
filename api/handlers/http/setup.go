@@ -24,6 +24,7 @@ func Run(appContainer app.App, cfg config.ServerConfig) error {
 
 	api.Post("/register", RegisterAPI(getMonitorService))
 	api.Post("/:api_id/start", StartAPIHandler(getMonitorService, schedulerRunner))
+	api.Get("/apis", ListAPIs(getMonitorService))
 
 	return router.Listen(fmt.Sprintf(":%d", cfg.HttpPort))
 }
